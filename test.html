@@ -1,0 +1,388 @@
+
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+pre {  font-family: Arial, Helvetica, sans-serif; font-weight: bold}
+code {  font-family: Arial, Helvetica, sans-serif; font-weight: bold}
+-->
+</style>
+</head>
+
+<body bgcolor="#FFFFFF">
+<h1>Recursive Descent Parsing</h1>
+<p><i>Parsing,</i> you will recall, is the process of turning a stream of tokens 
+  into an abstract syntax tree. Any parsing technique requires a <i>grammar</i>--a 
+  formal, detailed definition of what sequence of symbols constitutes a syntactically 
+  correct program. Grammars are usually defined in BNF notation, which we will 
+  explore shortly.</p>
+<p>For industrial-strength compilers, parsers are usually written in the <code>yacc</code> 
+  (Yet Another Compiler Compiler) formalism. <code>Yacc</code> is a program that 
+  reads a BNF-like grammar, creates the abstract syntax tree, <i>and</i> produces 
+  object code. <code>Yacc</code> is very powerful, but also quite complex, and 
+  there are subtle, difficult-to-understand constraints on the BNF that can be 
+  used.</p>
+<p>Recursive descent parsing is an alternative to using <code>yacc</code>. Whereas 
+  yacc reads BNF and produces a parser, recursive descent is a technique for doing 
+  the same thing manually. That is, once you have the BNF for a language, you 
+  can apply cookbook rules to write a parser that implements the BNF. With a little 
+  practice, you can turn BNF into code almost as fast as you can type.</p>
+<p>Recursive descent does have some drawbacks. While it is easy to detect syntax 
+  errors and produce error messages, it is more of a challenge to produce error 
+  messages that are helpful to the user. The typical error message simply tells 
+  what token was found, and the set of token types that would have been legal 
+  in that position.</p>
+<h2>Turning BNF into code</h2>
+<p>We will discuss first the simpler problem of <i>recognizing</i> a sequence 
+  of tokens. Recognition is like parsing, except that no parse tree is built. 
+  Instead, the result of recognition is a simple boolean value: <code>true</code> 
+  if the input stream is a syntactically correct program, and <code>false</code> 
+  otherwise. Turning a recognizer into a parser is simply a matter of adding tree-building 
+  code to each method, and returning the tree rather than a boolean value.</p>
+<p>Each nonterminal in the BNF is represented by a single method (or function,
+   if you are using a non-object-oriented language) in the recursive descent
+  parser.  Typically, the current token is passed in as a parameter, though it
+  may instead  be maintained as a global variable. We will assume a <code>Token</code> type,
+   with accessible fields <code>type</code> (containing a flag that indicates
+   to  which of several categories the token belongs) and <code>value</code> (containing
+    the actual characters that make up the token). We will further assume that
+   we have a <code>Tokenizer</code> class with a method <code>nextToken()</code> to get the
+   next Token from some input stream. </p>
+<p>When a method for a nonterminal succeeds, it should &quot;consume&quot; (use 
+  up) exactly those tokens that constitute the nonterminal. If the method fails 
+  (does not recognize the expected nonterminal), it should return without consuming 
+  any tokens--this may involve &quot;putting back&quot; some tokens. Failure is 
+  not, in general, an error, since we may need to test for several nonterminals 
+  before finding the correct one.</p>
+<h3>Delegation</h3>
+<p>The very simplest BNF rules are those that define a nonterminal as identical 
+  to another nonterminal. For example, we might define a &lt;variable&gt; as being 
+  identical to a &lt;name&gt;. This yields the following code:</p>
+<blockquote>
+  <pre>boolean variable(Token tok) {
+    return name(Token tok);
+}</pre>
+</blockquote>
+<p>Almost as simple is the case where a nonterminal is defined as consisting of 
+  a single terminal, for example, if &lt;less than&gt; is defined as &quot;&lt;&quot;. 
+  This requires that the next token be used and compared to the desired token.</p>
+<blockquote> 
+  <pre>boolean lessThan(Token tok) {
+	return tok.value.equals(&quot;&lt;&quot;);
+}
+</pre>
+</blockquote>
+<h3>Alternatives</h3>
+<p>A BNF rule may define alternative definitions for a nonterminal. For example,</p>
+<blockquote> 
+  <p><code>&lt;operator&gt; ::= &quot;+&quot; | &quot;-&quot; | &quot;*&quot; | &quot;/&quot;</code></p>
+</blockquote>
+<p>This is handled by testing for each alternative in turn, and returning true 
+  as soon as any alternative is satisfied, or false if none are satisfied.</p>
+<blockquote> 
+  <pre>boolean operator(Token tok) {
+    if (tok.value.equals(&quot;+&quot;)) return true;
+    if (tok.value.equals(&quot;-&quot;)) return true;
+    if (tok.value.equals(&quot;*&quot;)) return true;
+    if (tok.value.equals(&quot;/&quot;)) return true;
+    return false;
+}</pre>
+</blockquote>
+<h3>Sequencing</h3>
+<p>Some BNF rules consist of a simple sequence of terminals and nonterminals. 
+  If it were not for the need to return a boolean result, we could implement this 
+  with a simple sequence of method calls. For example,</p>
+<blockquote>
+  <pre>&lt;assignment&gt; ::= &lt;variable&gt; &quot;=&quot; &lt;expression&gt;</pre>
+</blockquote>
+<p>could <i>almost</i> be coded as</p>
+<blockquote> 
+  <pre>boolean assignment(Token tok) {
+    variable(tok);
+    equalsSign(tok);
+    expression(tok);
+}</pre>
+</blockquote>
+<p>There are several problems with this. First, of course, the method has to return 
+  a boolean to tell whether it succeeded. Second, after each of the first two 
+  calls, a new token has to be acquired. Finally, if a failure occurs after new 
+  token have been taken, those tokens have to be &quot;put back&quot; so they 
+  can be reused by some other rule. The resultant code is somewhat cluttered, 
+  though not particularly complex:</p>
+<blockquote> 
+  <pre>boolean assignment(Token tok) {
+    Token tok2, tok3;
+ 
+    if (variable(tok)) {
+        tok2 = tokenizer.nextToken();
+    } else {
+        return false;
+    }
+    if (equalsSign(tok2)) {
+        tok3 = tokenizer.nextToken();
+    } else {
+        tokenizer.pushBack(tok2);
+        return false;
+    }
+    if (expression(tok3)) {
+        return true;
+    } else {
+        tokenizer.pushBack(tok3); // notice order of pushBacks
+        tokenizer.pushBack(tok2);
+        return false;
+    }
+}</pre>
+</blockquote>
+<p>Since this pattern occurs frequently, we can simplify the code if our <code>Tokenizer</code> class
+  has a way to &quot;back up&quot; and give us the same Tokens over again. This can be
+  done either by having the Tokenizer 
+  class keep track of the last several tokens that it has returned, or by keeping
+  track of the Tokens ourselves, and telling the Tokenizer class to take back
+  those Tokens. For now, let's assume that the Tokenizer has a <code>pushBack(<i>int</i>)</code> method
+  to reuse the most recent <i><code>int</code></i> 
+  tokens. Moreover, since we always return <code>false</code> after calling <code>pushBack</code>,
+   we can simplify our code ever further by having <code>pushBack</code> itself
+    return <code>false</code>.</p>
+<blockquote> 
+  <pre>boolean assignment(Token tok) { 
+    if (variable(tok)) {
+        tok = tokenizer.nextToken();
+    } else {
+        return false;
+    }
+    if (equalsSign(tok)) {
+        tok = tokenizer.nextToken();
+    } else {
+        return tokenizer.pushBack(1);
+    }
+    if (expression(tok)) {
+        return true;
+    } else {
+        return tokenizer.pushBack(2);
+    }
+}</pre>
+</blockquote>
+<p><br>
+  There is a further problem, in that sometimes we may not know exactly how many 
+  tokens have been consumed, and must be returned. Consider the following BNF:</p>
+<blockquote>
+  <pre>&lt;something&gt; ::= &lt;foo&gt;&lt;bar&gt;</pre>
+</blockquote>
+<p>If &lt;foo&gt; is recognized but &lt;bar&gt; is not, we must replace the (unknown)
+   number of tokens recognized by &lt;foo&gt;. This can be handled by having
+   the  Tokenizer class keep a count of the number of tokens read, and the ability
+   to reuse  tokens back to a given token number. Thus, the above code could
+   be represented  by something like:</p>
+<blockquote>
+  <pre>boolean something(Token tok) {
+    int oldTokenCount = tokenizer.getTokenCount();
+    if (foo(tok)) {
+        tok = tokenizer.nextToken();
+    } else {
+        return false;
+    }
+    if (bar(tok)) {
+        return true;
+    } else {
+        return tokenizer.pushBack(tokenizer.getTokenCount() - oldTokenCount);
+    }
+}
+        </pre>
+</blockquote>
+<h3>Sequencing and Alternation</h3>
+<p>Sequencing combined with alternation is, in most cases, simply handled.
+For example,</p>
+<blockquote>
+  <pre>&lt;integer&gt; ::= &lt;unsigned integer&gt; |  &quot;-&quot; &lt;unsigned integer&gt;
+
+boolean unsignedInteger(Token tok) {
+    if (number(tok)) return true;
+
+    if (if (tok.value.equals(&quot;-&quot;))) {
+        tok = tokenizer.nextToken();
+    } else {
+        return false;
+    }
+    if (number(tok)) return true;
+    } else {
+        return tokenizer.pushBack(1);
+    }
+}</pre>
+</blockquote>
+<h3>Living without <code>pushBack</code></h3>
+<p>If we have a Tokenizer without adequate <code>pushBack</code> facilities,
+  it is almost always better to wrap that Tokenizer in a &quot;front end&quot; class of
+  our own that provides these facilities. But if we only need pushBack in a very
+  few places, sometimes it is better to modify the grammar so as to avoid the
+  need for reusing Tokens.</p>
+<p>For example, </p>
+<blockquote>
+  <p><code>&lt;expression&gt; ::= &lt;term&gt; &quot;+&quot; &lt;expression&gt; | &lt;term&gt; &quot;-&quot; &lt;expression&gt;
+    | &lt;term&gt;</code> </p>
+</blockquote>
+<p>Without pushBack, if we find a &lt;term&gt; but don't find a &quot;+&quot; after it, we can't
+  put back the &lt;term&gt; for use in another alternative. However, the problem goes
+  away entirely if we rewrite the grammar slightly:</p>
+<blockquote>
+  <p><code>&lt;expression&gt; ::= &lt;term&gt; &lt;expression extender&gt;<br>
+    <br>
+  &lt;expression extender&gt; ::= &quot;+&quot; &lt;expression&gt; | &quot;-&quot; &lt;expression&gt; | &lt;empty&gt;</code></p>
+</blockquote>
+<h3>Direct Recursion</h3>
+<p>Many BNF rules are recursive: Statements can contain statements, and expressions 
+  can contain expressions. For a first example, though, we will use something 
+  simpler: an &quot;unsigned integer.&quot; The idea here is that an integer contains 
+  other integers, as for example the integer <code>12345</code> contains the integer 
+  <code>345</code>. In practice, of course, recognizing an integer would be done 
+  by the tokenizer, not by the parser.</p>
+<p>There are four obvious recursive ways to define an unsigned integer, as follows:</p>
+<blockquote> 
+  <p><code>// left recursive, base case first<br>
+    &lt;unsigned integer&gt; ::= &lt;digit&gt; | &lt;unsigned integer&gt; &lt;digit&gt;</code></p>
+  <p><code>// right recursive, base case first<br>
+    &lt;unsigned integer&gt; ::= &lt;digit&gt; | &lt;digit&gt; &lt;unsigned integer&gt;</code></p>
+  <p><code>// left recursive, base case last<br>
+    &lt;unsigned integer&gt; ::= &lt;unsigned integer&gt;&lt;digit&gt; | &lt;digit&gt;</code></p>
+  <p><code>// right recursive, base case last<br>
+    &lt;unsigned integer&gt; ::= &lt;digit&gt;&lt;unsigned integer&gt; | &lt;digit&gt;</code></p>
+</blockquote>
+<p>When writing a recursive program, it is generally a good idea to put the base 
+  cases first. However, in this case, that strategy does not work. Our recursive 
+  method for &lt;unsigned integer&gt; would begin like this:</p>
+<blockquote> 
+  <pre>boolean unsignedInteger(Token tok) {
+    if (tok.type == Token.DIGIT) return true;
+    ...
+}</pre>
+</blockquote>
+<p>Clearly, with this code, the second and subsequent digits would never be recognized. 
+  This suggests an important principle:</p>
+<div align="center">
+  <table width="75%" border="1" cellspacing="0" cellpadding="8">
+    <tr> 
+      <td>If one alternative is an initial substring of another alternative, the 
+        longer alternative should be attempted first.</td>
+    </tr>
+  </table>
+  <br>
+</div>
+<p>Left recursion has an even worse problem. A left-recursive method would begin 
+  as follows:</p>
+<blockquote> 
+  <pre>
+boolean unsignedInteger(Token tok) {
+    if (unsignedInteger(tok)) {
+        ...
+}</pre>
+</blockquote>
+<p>Any time a recursive call is made with exactly the same parameter values as 
+  the calling method, the result is an &quot;infinite&quot; recursion. Depending 
+  on the implementation, such a program will either hang or will terminate abnormally. 
+  This suggests a second important principle:</p>
+<div align="center"> 
+  <table width="75%" border="1" cellspacing="0" cellpadding="8">
+    <tr> 
+      <td>Avoid left recursion!</td>
+    </tr>
+  </table>
+  <br>
+</div>
+<p>This leaves us with trying to define an unsigned integer with a right-recursive 
+  program, with the base case last:</p>
+<blockquote> 
+  <pre>// &lt;unsigned integer&gt; ::= &lt;digit&gt;&lt;unsigned integer&gt; | &lt;digit&gt;
+
+boolean unsignedInteger(Token tok) {
+
+    // first case: &lt;unsigned integer&gt; ::= &lt;digit&gt;&lt;unsigned integer&gt;
+    if (tok.type == Token.DIGIT) {
+        tok = tokenizer.nextToken();
+    } else {
+        return false;
+    }
+    if (unsignedInteger(tok)) {
+        return true;
+    } else {
+        tokenizer.pushBack(1);
+        tok = currentToken();
+    }
+
+    // second case: &lt;unsigned integer&gt; ::= &lt;digit&gt;
+    if (tok.type == Token.DIGIT) {
+        tok = tokenizer.nextToken();
+    } else {
+        return false;
+    }
+}</pre>
+</blockquote>
+<p>When the first case in the above code fails, we restore everything to the way 
+  it was on method entry, before going on to the second case. This involves putting 
+  back the tokens we consumed in the failed attempt, and resetting the tok variable 
+  to what it was upon method entry.</p>
+<p>The above code could be somewhat simplified, but at the moment we are concerned 
+  with describing a fairly mechanical way of turning BNF into code.</p>
+<h3>Indirect Recursion</h3>
+<p>Usually recursion involves two or more rules, as for example,</p>
+<blockquote>
+  <pre>&lt;statement&gt; ::= ... | &lt;if statement&gt; | ...
+&lt;if statement&gt; ::= if ( &lt;condition&gt; ) &lt;statement&gt;
+</pre>
+</blockquote>
+<p>Neither of these rules is recursive in itself, but each refers to the other, 
+  and together they form an indirect recursion. Usually, nothing special must 
+  be done to handle indirect recursion; the only case to avoid is when the very 
+  first element of each nonterminal is the other nonterminal, so that together 
+  the rules form an infinite recursion. This is very unlikely to occur in practice.</p>
+<h3>Optional Elements</h3>
+<p>Although not present in original BNF, Extended BNF (EBNF) allows optional elements, 
+  enclosed in brackets. Thus, for example, the following indicates that the <code>&lt;else 
+  part&gt;</code> is optional:</p>
+<blockquote>
+  <pre>&lt;if statement&gt; ::= &lt;if part&gt; [ &lt;else part&gt; ]
+</pre>
+</blockquote>
+<p>This can be implemented quite easily. All we need do is attempt to parse the 
+  optional element, and return true whether or not the parse succeeds.</p>
+<blockquote>
+  <pre>boolean ifStatement(Token tok) {
+    if (ifPart(tok)) {
+        tok = tokenizer.nextToken();
+    } else {
+        return false;
+    }
+    elsePart(tok); // ignore result
+    return true;
+}</pre>
+</blockquote>
+<h3>
+Repeated Elements
+</h3>
+<p>EBNF also allows zero or more repetitions of an element, enclosed in braces.
+  For example,
+<blockquote>
+  <p><code>&lt;list&gt; ::= &lt;item&gt; { &quot;,&quot; &lt;item&gt; }</code></p>
+</blockquote>
+<p>that is, a &lt;list&gt; consists of one or more &lt;item&gt;s, separated by
+  commas. This construction is best handled with a loop, rather than with recursion.
+<blockquote>
+  <pre>boolean list(Token tok) {
+    if (item(tok)) {
+        tok = tokenizer.nextToken();
+        while (tok.value.equals(&quot;,&quot;)) {
+            tok = tokenizer.nextToken();
+            if (!item(tok)) error();
+        }
+        return true;
+    }
+    return false;
+}</pre>
+</blockquote>
+<p>EBNF adds no expressive power to BNF; that is, any grammar that can be written
+  with EBNF could also be written with just BNF. However, just as EBNF makes
+  it simpler to write grammars, it also makes it easier to write recognizers
+  for those grammars. </p>
+
+</body>
+</html>

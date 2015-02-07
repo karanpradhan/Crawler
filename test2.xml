@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="./rss/rss.xsl"?><documentcollection><document crawled="2014-03-27T19:40:05" location="http://crawltest.cis.upenn.edu/nytimes/Africa.xml">
+		<rss version="2.0">
+			<channel>
+				<title>NYT &gt; Africa</title>
+				<link>http://www.nytimes.com/pages/international/africa/index.html?partner=rssnyt
+				</link>
+				<description>Find breaking news, world news, multimedia and opinion
+					on Africa from South Africa, Egypt, Ethiopia, Libya, Rwanda, Kenya,
+					Morocco, Zimbabwe, Sudan and Algeria. </description>
+				<copyright>Copyright 2006 The New York Times Company</copyright>
+				<language>en-us</language>
+				<lastBuildDate>Thu, 2 Feb 2006 23:05:01 EST</lastBuildDate>
+				<image>
+					<url>http://graphics.nytimes.com/images/section/NytSectionHeader.gif
+					</url>
+					<title>NYT &gt; Africa</title>
+					<link>http://www.nytimes.com/pages/international/africa/index.html
+					</link>
+				</image>
+				<item>
+					<title>Egypt Insists That Hamas Stop Violence</title>
+					<link>http://www.nytimes.com/2006/02/02/international/middleeast/02egypt.html?ex=1296536400&#38;en=06debaf57bef24dc&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>Egypt insisted that Hamas confirm existing agreements
+						between Israel and the Palestinians and recognize Israel&#39;s
+						legitimacy.</description>
+					<author>STEVEN ERLANGER</author>
+					<pubDate>Thu, 02 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/02/international/middleeast/02egypt.html
+					</guid>
+				</item>
+				<item>
+					<title>World Briefings: Africa, Asia, Middle East, United Nations,
+						Europe</title>
+					<link>http://www.nytimes.com/2006/02/03/international/03briefs.html?ex=1296622800&#38;en=17c287b37f35e7d9&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>AFRICA.</description>
+					<author>(AP)</author>
+					<pubDate>Fri, 03 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/03/international/03briefs.html
+					</guid>
+				</item>
+				<item>
+					<title>World Briefing: Africa, Americas, Europe and Asia</title>
+					<link>http://www.nytimes.com/2006/02/02/international/02briefs.html?ex=1296536400&#38;en=cd101688c565f27f&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>AFRICA.</description>
+					<pubDate>Thu, 02 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/02/international/02briefs.html
+					</guid>
+				</item>
+				<item>
+					<title>Loan for Foreign Mining in Ghana Approved</title>
+					<link>http://www.nytimes.com/2006/02/01/international/africa/01africa.html?ex=1296450000&#38;en=6ef2e47c65509682&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>The World Bank&#39;s investment agency said the loan
+						was approved on the condition that Newmont Mining meet stringent
+						social and environmental standards.</description>
+					<author>CELIA W. DUGGER</author>
+					<pubDate>Wed, 01 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/01/international/africa/01africa.html
+					</guid>
+				</item>
+				<item>
+					<title>World Briefing: Asia, Middle East, Americas, Europe and
+						Africa</title>
+					<link>http://www.nytimes.com/2006/02/01/international/01briefs.html?ex=1296450000&#38;en=a744dabed3339202&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>ASIA.</description>
+					<author>SALMAN MASOOD (NYT)</author>
+					<pubDate>Wed, 01 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/01/international/01briefs.html
+					</guid>
+				</item>
+				<item>
+					<title>Khartoum Journal: Sudan Leader Waits, and Waits, for His
+						Ship to Come In</title>
+					<link>http://www.nytimes.com/2006/01/31/international/africa/31khartoum.html?ex=1296363600&#38;en=c514139910f2888c&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>For a war-torn, impoverished country, a gigantic,
+						luxurious presidential yacht.</description>
+					<author>MARC LACEY</author>
+					<pubDate>Tue, 31 Jan 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/01/31/international/africa/31khartoum.html
+					</guid>
+				</item>
+			</channel>
+		</rss>
+	</document>
+	<document crawled="2014-03-27T19:40:05"
+		location="http://crawltest.cis.upenn.edu/nytimes/Americas.xml">
+		<rss version="2.0">
+			<channel>
+				<title>NYT &gt; Americas</title>
+				<link>http://www.nytimes.com/pages/international/americas/index.html?partner=rssnyt
+				</link>
+				<description>Find breaking news, world news &#38; multimedia on the
+					United States, Canada &#38; South America with news from Mexico,
+					Brazil, Colombia, Chile, Argentina, Peru &#38; Venezuela.
+				</description>
+				<copyright>Copyright 2006 The New York Times Company</copyright>
+				<language>en-us</language>
+				<lastBuildDate>Fri, 3 Feb 2006 03:05:00 EST</lastBuildDate>
+				<image>
+					<url>http://graphics.nytimes.com/images/section/NytSectionHeader.gif
+					</url>
+					<title>NYT &gt; Americas</title>
+					<link>http://www.nytimes.com/pages/international/americas/index.html
+					</link>
+				</image>
+				<item>
+					<title>Ch&#225;vez Ousts U.S. Diplomat on Spying Charge</title>
+					<link>http://www.nytimes.com/2006/02/03/international/americas/03venez.html?ex=1296622800&#38;en=cd4b1ead5292b66f&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>Venezuela&#39;s government has ordered the expulsion
+						of the American naval attach&#233; at the United States Embassy in
+						Caracas for spying.</description>
+					<author>JUAN FORERO</author>
+					<pubDate>Fri, 03 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/03/international/americas/03venez.html
+					</guid>
+				</item>
+				<item>
+					<title>Clinic Where Coretta King Died Attracts the Desperate
+					</title>
+					<link>http://www.nytimes.com/2006/02/03/international/americas/03mexico.html?ex=1296622800&#38;en=16c66c0ee1e26e9b&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>The founder of the Mexican clinic where Coretta Scott
+						King sought treatment never went to medical school and has a
+						history of fraud allegations against him in the U.S.</description>
+					<author>JAMES C. McKINLEY Jr.</author>
+					<pubDate>Fri, 03 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/03/international/americas/03mexico.html
+					</guid>
+				</item>
+				<item>
+					<title>World Briefing: Africa, Americas, Europe and Asia</title>
+					<link>http://www.nytimes.com/2006/02/02/international/02briefs.html?ex=1296536400&#38;en=cd101688c565f27f&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>AFRICA.</description>
+					<pubDate>Thu, 02 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/02/international/02briefs.html
+					</guid>
+				</item>
+				<item>
+					<title>World Briefing: Asia, Middle East, Americas, Europe and
+						Africa</title>
+					<link>http://www.nytimes.com/2006/02/01/international/01briefs.html?ex=1296450000&#38;en=a744dabed3339202&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>ASIA.</description>
+					<author>SALMAN MASOOD (NYT)</author>
+					<pubDate>Wed, 01 Feb 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/02/01/international/01briefs.html
+					</guid>
+				</item>
+				<item>
+					<title>World Briefing: Europe, Africa, Americas and Asia</title>
+					<link>http://www.nytimes.com/2006/01/31/international/31briefs.html?ex=1296363600&#38;en=c78b0bfb6c86b991&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>EUROPE.</description>
+					<pubDate>Tue, 31 Jan 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/01/31/international/31briefs.html
+					</guid>
+				</item>
+				<item>
+					<title>Antiwar Campaigner Speaks on Ch&#225;vez Broadcast</title>
+					<link>http://www.nytimes.com/2006/01/30/international/americas/30venezuela.html?ex=1296277200&#38;en=d0303560a3d530bc&#38;ei=5088&#38;partner=rssnyt&#38;emc=rss
+					</link>
+					<description>The Venezuela leader joined Cindy Sheehan to attack
+						President Bush and promised to support her protest against the
+						Iraq war.</description>
+					<author>THE ASSOCIATED PRESS</author>
+					<pubDate>Mon, 30 Jan 2006 00:00:00 EDT</pubDate>
+					<guid isPermaLink="false">http://www.nytimes.com/2006/01/30/international/americas/30venezuela.html
+					</guid>
+				</item>
+			</channel>
+		</rss>
+	</document>
+</documentcollection>
